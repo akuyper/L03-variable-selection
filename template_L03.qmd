@@ -1,0 +1,166 @@
+---
+title: "L03 Variable Selection"
+subtitle: "Data Science 3 with R (STAT 301-3)"
+author: "YOUR NAME"
+pagetitle: "L03 YOUR NAME"
+date: today
+
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    embed-resources: true
+    code-fold: false
+    link-external-newwindow: true
+
+execute:
+  warning: false
+  
+from: markdown+emoji
+reference-location: margin
+citation-location: margin
+---
+
+::: {.callout-tip icon=false}
+
+## Github Repo Link
+
+To link to your github **repo**sitory, appropriately edit the example link below. Meaning replace `https://your-github-repo-url` with your github repo url. Suggest verifying the link works before submitting.
+
+[https://your-github-repo-url](https://your-github-repo-url)
+
+:::
+
+## Overview
+
+The goals of this lab are to (1) learn to implement variable selection techniques using models we have learned and (2) introduce a new model type: support vector machines.
+
+## Exercise
+
+We will be re-visiting the rideshare dataset used in L02 Initial Setup. Find the `rideshare` dataset^[Kaggle Uber & Lyft Dataset ([see website](https://www.kaggle.com/datasets/brllrb/uber-and-lyft-dataset-boston-ma))] in the `\data` directory. Take a moment to read the variable definitions in `rideshare_codebook.txt`.
+
+::: {.callout-note icon="false"}
+## Prediction goal
+
+The objective is to predict the `price` of an Uber & Lyft rideshare.
+
+:::
+
+### Getting Started
+
+The initial setup has been completed for you using the following settings:
+
+- read in data, converted character variables to factors, removed missingness issues with the outcome variable `price`.
+- transformed the target variable `price` with a log10 transformation
+- downsampled the dataset to 0.5% of the original data stratified by price for computation purposes
+- implemented an 80-20 training-test split using stratified sampling (stratified by target variable with 4 strata)
+- resamples were constructed by taking the training dataset and applying repeated V-fold cross-validation (5 folds, 3 repeat) with stratification on the target variable with 4 strata.
+
+1. Run `1_initial_setup.R`. 
+2. After running the script the `data-splitting` directory should contain `rideshare_training.rda`, `rideshare_testing.rda`, and `rideshare_folds.rda`. 
+3. Check to see if any of these should be added to the `.gitignore` file.
+
+### Task 1
+
+Use lasso regression to perform variable selection. 
+
+- use a v-fold cross validation^[Different from the folds created in the initial setup and is done to guard against overfitting.]: 5 folds, 1 repeat, & stratify on on target variable
+- use the `glmnet` engine
+- tune the `penalty` 
+- use a regular grid of 5
+
+After finalizing and fitting the optimal lasso model, what variables were selected to include in your model?
+
+::: {.callout-tip icon="false"}
+## Solution
+
+YOUR SOLUTION HERE --- just need the list of selected variables
+
+:::
+
+### Task 2
+
+Use random forest to perform variable selection. 
+
+- use a v-fold cross validation^[Different from the folds created in the initial setup and is done to guard against overfitting.]: 5 folds, 1 repeat, & stratify on on target variable
+- `ranger` engine
+- in the engine set `importance = "impurity"` --- this is what allows us to extract the variable importance
+- tune `mtry` and `min_n`
+- set `trees = 1000`
+- use a regular grid with `levels = 4`
+
+After finalizing and fitting the optimal random forest model, select the top 20 important variables using `vip::vi()`. What variables were selected to include in your model?
+
+::: {.callout-tip icon="false"}
+## Solution
+
+YOUR SOLUTION HERE --- just need the list of selected variables
+
+:::
+
+### Task 3
+
+Now that variable selection/screening has been completed we can proceed to feature engineering (recipe building).
+
+Create 2 recipes:
+
+1. The first should only use the variables selected by lasso regression in task 1
+2. The second should only use the variables selected by the random forest variable importance in task 2.
+
+::: {.callout-note icon="false"}
+
+Both recipes should contain the standard minimal steps to run a recipe such as dummy encoding, handling zero variance, normalization (if appropriate).
+
+:::
+
+::: {.callout-tip icon="false"}
+## Solution
+
+YOUR SOLUTION HERE --- should provide display code of recipes
+
+:::
+
+### Task 4
+
+Fit each of the recipes to the following models and record computation time:
+
+1. Support vector machine (polynomial): tune `cost`, `degree`, and `scale_factor` (default values are sufficient, free to change if you want)
+
+2.  Support vector machine (radial basis function): tune `cost` and `rbf_sigma` (default values a sufficient, free to change if you want)
+
+
+Some general notes:
+
+- A basic layout is suggested/provided in `4_tune_template.R`. 
+- We also want to collect how long it takes the tuning process for each model type. We can use the `tictoc` package --- code is provided in `4_tune_template.R`.
+
+::: {.callout-tip icon="false"}
+## Solution
+
+YOUR SOLUTION HERE --- should delete this box, the results in Tasks 5 & 6 should provide sufficient evidence this was completed
+
+:::
+
+
+### Task 5
+
+Provide a nicely formatted table of model results. The table should include the model name, recipe name, best performance achieved, standard error of metric, and run time.
+
+::: {.callout-tip icon="false"}
+## Solution
+
+YOUR SOLUTION HERE --- no code, only presentation of results
+
+:::
+
+### Task 6
+
+Evaluate the best performing model on the testing data. This should include the interpretation of at least 2 metrics and a plot of observed vs predicted.
+
+::: {.callout-tip icon="false"}
+## Solution
+
+YOUR SOLUTION HERE --- no code, only presentation of results
+
+:::
