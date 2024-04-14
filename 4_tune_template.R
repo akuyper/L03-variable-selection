@@ -31,6 +31,7 @@ tidymodels_prefer()
 
 
 # fit workflow/model ----
+tic.clearlog() # clear log
 tic("USEFUL_NAME: MODEL_REC") # start clock
 
 # tuning code in here
