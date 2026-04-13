@@ -38,7 +38,7 @@ rideshare <- rideshare |>
 # downsample 0.5% of the data
 set.seed(1234)
 rideshare_downsample <- rideshare |>
-  initial_split(prop = 0.005, strata = price)
+  initial_split(prop = 0.005, strata = price_log10)
 
 # extract downsampled data
 rideshare_small <- training(rideshare_downsample)
@@ -47,27 +47,27 @@ rideshare_eda <- testing(rideshare_downsample)
 
 # Initial split & resamples ----
 set.seed(3013)
-rideshare_split <- initial_split(rideshare_small, prop = 0.8, strata = price)
+rideshare_split <- initial_split(rideshare_small, prop = 0.8, strata = price_log10)
 
 rideshare_training <- training(rideshare_split)
 rideshare_testing <- testing(rideshare_split)
 
 # resamples: v-fold
 rideshare_folds <- rideshare_training |>
-  vfold_cv(v = 5, repeats = 3, strata = price)
+  vfold_cv(v = 5, repeats = 3, strata = price_log10)
 
 # save datasets
 save(
   rideshare_training,
   file = here("data-splitting/rideshare_training.rda")
-  )
+)
 
 save(
   rideshare_testing,
   file = here("data-splitting/rideshare_testing.rda")
-  )
+)
 
 save(
   rideshare_folds,
   file = here("data-splitting/rideshare_folds.rda")
-  )
+)
